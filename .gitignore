@@ -1,0 +1,14 @@
+# Private prototype, drafts, and user data
+/project_jadi/
+/.private/
+/data/
+
+# Build outputs and test snapshots
+/build/
+**/build/
+**/build_*/
+*.o
+*.exe
+*.dbtxt
+*.dbtxt.bak
+*.tmp
