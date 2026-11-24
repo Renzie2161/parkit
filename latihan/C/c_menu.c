@@ -43,4 +43,5 @@ int main(void)
 }
 
 /* Coba 45, teks panjang, 4, 5, lalu 0. Angka 45 bukan pilihan 4.
-   Di parkit.c, lengkapi 0–5. Tampilan contoh boleh didesain ulang. */
+   Di parkit.c, lengkapi pilihan 0–7, termasuk Urut Plat dan Ekspor Riwayat.
+   Tampilan contoh boleh didesain ulang. */

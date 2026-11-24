@@ -31,7 +31,8 @@ int main(void)
 
 /* Langkah berikutnya:
  * 1. Ubah satu nilai array dan tebak indeks hasilnya.
- * 2. Versi akhir meminta operator memilih, bukan memilih otomatis.
- * 3. Di kendaraan_masuk, ubah kode pilihan ke indeks, lalu cek jenis,
- *    petak kosong, dan plat ganda sebelum menulis ke daftar.
+ * 2. Fungsi ini hanya mendeteksi apakah blok masih punya tempat kosong.
+ *    Di ParkIt, indeks hasil bukan pilihan akhir: operator memilih kode petak.
+ * 3. Coba A2 untuk motor: tolak karena bloknya salah, meskipun A2 kosong.
+ *    Di kendaraan_masuk, cek juga petak terisi dan plat ganda sebelum mencatat.
  */
