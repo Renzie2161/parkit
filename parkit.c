@@ -166,13 +166,45 @@ int kendaraan_keluar(char daftar[][UKURAN_PLAT],
 
 void ekspor_riwayat(const CatatanKeluar riwayat[], int jumlah)
 {
-    /* TODO B: Minta konfirmasi sebelum menimpa riwayat.txt. Buka file
-       dengan fopen mode w, periksa NULL, lalu panggil cetak_riwayat.
-       Periksa ferror dan fclose sebelum mengumumkan sukses.
-       Uji batal tanpa mengubah file, isi laporan, dan gagal membuka file. */
-    (void)riwayat;
-    (void)jumlah;
-    puts("Ekspor riwayat belum diimplementasikan.");
+    char masukan[16];
+    printf("Timpa riwayat.txt? (1 = Ya, 0 = Batal): ");
+    if (fgets(masukan, sizeof masukan, stdin) == NULL) {
+        puts("Ekspor dibatalkan.");
+        return;
+    }
+
+    int i = 0;
+    while (masukan[i] != '\0' && masukan[i] != '\n')
+        i++;
+    if (masukan[i] == '\0' && i == (int)(sizeof masukan - 1)) {
+        int sisa;
+        while ((sisa = getchar()) != '\n' && sisa != EOF)
+            ;
+        puts("Ekspor dibatalkan.");
+        return;
+    }
+    if (i > 0 && masukan[i - 1] == '\r')
+        i--;
+    if (i != 1 || masukan[0] != '1') {
+        puts("Ekspor dibatalkan.");
+        return;
+    }
+
+    FILE *berkas = fopen("riwayat.txt", "w");
+    if (berkas == NULL) {
+        puts("Gagal membuka riwayat.txt.");
+        return;
+    }
+
+    cetak_riwayat(berkas, riwayat, jumlah);
+    int gagal_tulis = ferror(berkas);
+    int status_tutup = fclose(berkas);
+    if (gagal_tulis || status_tutup == EOF) {
+        puts("Gagal menyimpan riwayat.txt.");
+        return;
+    }
+
+    puts("Riwayat berhasil diekspor ke riwayat.txt.");
 }
 
 int main(void)
@@ -181,9 +213,6 @@ int main(void)
     CatatanKeluar riwayat[MAKS_RIWAYAT];
     int jumlah_riwayat = 0;
 
-    /* TODO B + A: Setelah fungsi anggota siap, uji satu alur pada satu waktu:
-       masuk -> cari -> keluar batal -> keluar setuju -> lihat riwayat.
-       Jangan menambah main() kedua. Jaga urutan dan parameter tiap panggilan. */
     puts("ParkIt | Starter kelompok");
     while (1) {
         tampilkan_menu(daftar);
@@ -191,15 +220,27 @@ int main(void)
         if (pilihan == 0 || feof(stdin) || ferror(stdin))
             break;
 
-        /* TODO B + A: Sambungkan pilihan 1 ke kendaraan_masuk, 2 ke
-           kendaraan_keluar (simpan jumlah kembaliannya), 3 ke baca_plat,
-           cari_plat dan tampilkan_hasil_cari, 4 ke tampilkan_denah, dan
-           5 ke cetak_riwayat(stdout, ...), 6 ke tampilkan_daftar_urut,
-           dan 7 ke ekspor_riwayat. Aktifkan tiap pilihan saat fungsi siap. */
-        puts("Pilihan belum tersedia. Ketik 0 untuk keluar.");
+        if (pilihan == 1) {
+            kendaraan_masuk(daftar);
+        } else if (pilihan == 2) {
+            jumlah_riwayat = kendaraan_keluar(daftar, riwayat, jumlah_riwayat);
+        } else if (pilihan == 3) {
+            char plat[UKURAN_PLAT];
+            if (baca_plat(plat)) {
+                int petak = cari_plat(daftar, plat, 0);
+                tampilkan_hasil_cari(plat, petak);
+            }
+        } else if (pilihan == 4) {
+            tampilkan_denah(daftar);
+        } else if (pilihan == 5) {
+            cetak_riwayat(stdout, riwayat, jumlah_riwayat);
+        } else if (pilihan == 6) {
+            tampilkan_daftar_urut(daftar);
+        } else if (pilihan == 7) {
+            ekspor_riwayat(riwayat, jumlah_riwayat);
+        } else {
+            puts("Pilihan tidak sah. Pilih angka 0-7.");
+        }
     }
-    /* Dua nilai di bawah mulai dipakai saat checkout dan riwayat terhubung. */
-    (void)riwayat;
-    (void)jumlah_riwayat;
     return 0;
 }
